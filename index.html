@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BrandTone - Estúdio Musical</title>
+    <title>BrandTone - Estúdio de Afinação</title>
     <style>
         :root {
-            --primary: #6366f1;
+            --primary: #8b5cf6;
+            --primary-hover: #7c3aed;
             --bg-dark: #0f172a;
             --surface: #1e293b;
             --text: #f8fafc;
+            --accent: #06b6d4;
         }
 
         body {
@@ -27,35 +29,38 @@
         .container {
             background-color: var(--surface);
             padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             width: 100%;
-            max-width: 500px;
-            text-align: center;
+            max-width: 600px;
         }
 
         h1 {
             color: var(--primary);
-            margin-bottom: 5px;
+            margin: 0 0 5px 0;
+            text-align: center;
         }
 
         .subtitle {
             font-size: 0.9rem;
             color: #94a3b8;
             margin-bottom: 25px;
+            text-align: center;
         }
 
         .upload-section {
             border: 2px dashed #475569;
-            padding: 20px;
+            padding: 30px;
             border-radius: 8px;
             margin-bottom: 20px;
             cursor: pointer;
+            text-align: center;
             transition: 0.3s;
         }
 
         .upload-section:hover {
             border-color: var(--primary);
+            background-color: #243249;
         }
 
         input[type="file"] {
@@ -63,23 +68,36 @@
         }
 
         .controls {
-            margin-top: 25px;
             display: none;
+            margin-top: 25px;
         }
 
         .control-group {
             margin-bottom: 20px;
-            text-align: left;
+            background: #111827;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #374151;
         }
 
         label {
             display: block;
-            font-size: 0.85rem;
-            margin-bottom: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
             color: #cbd5e1;
+            font-weight: 600;
         }
 
-        select, input[type="range"] {
+        .range-inputs {
+            display: flex;
+            gap: 15px;
+        }
+
+        .range-inputs div {
+            flex: 1;
+        }
+
+        select, input[type="range"], input[type="number"] {
             width: 100%;
             padding: 10px;
             border-radius: 6px;
@@ -89,50 +107,84 @@
             box-sizing: border-box;
         }
 
+        .grid-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
         .btn {
-            background-color: var(--primary);
             color: white;
             border: none;
-            padding: 12px 24px;
+            padding: 14px;
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
-            width: 100%;
             font-size: 1rem;
             transition: 0.2s;
         }
 
-        .btn:hover {
-            background-color: #4f46e5;
-        }
+        .btn-primary { background-color: var(--primary); }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+        
+        .btn-accent { background-color: var(--accent); }
+        .btn-accent:hover { background-color: #0891b2; }
 
         .status {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: #10b981;
+            text-align: center;
             margin-top: 10px;
+            font-weight: 500;
+        }
+
+        .info-text {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-top: 4px;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>BrandTone</h1>
-    <div class="subtitle">Ajuste de tom e edição simplificada</div>
+    <h1>BrandTone PRO</h1>
+    <div class="subtitle">Auto-Pitch, Seleção de Faixa e Exportação de Áudio</div>
 
     <div class="upload-section" onclick="document.getElementById('audio-file').click()">
-        <p id="upload-text">Clique para selecionar seu arquivo de áudio (.mp3, .wav)</p>
+        <p id="upload-text">Arraste ou clique para selecionar a voz/música (.mp3, .wav)</p>
         <input type="file" id="audio-file" accept="audio/*">
     </div>
 
     <div id="status-msg" class="status"></div>
 
     <div class="controls" id="editor-controls">
+        
         <div class="control-group">
-            <label for="pitch-shift">Ajuste Fino de Tom (Semitons): <span id="pitch-val">0</span></label>
-            <input type="range" id="pitch-shift" min="-12" max="12" step="1" value="0">
+            <label>1. Selecionar Pedaço do Áudio (em segundos)</label>
+            <div class="range-inputs">
+                <div>
+                    <span class="info-text">Início:</span>
+                    <input type="number" id="start-time" value="0" min="0" step="0.1">
+                </div>
+                <div>
+                    <span class="info-text">Fim (Duração total: <span id="total-duration">0</span>s):</span>
+                    <input type="number" id="end-time" value="10" min="0" step="0.1">
+                </div>
+            </div>
         </div>
 
-        <button class="btn" id="play-btn">Reproduzir Áudio Modificado</button>
+        <div class="control-group">
+            <label for="pitch-shift">2. Auto-Pitch / Correção de Tom (Semitons): <span id="pitch-val">0</span></label>
+            <input type="range" id="pitch-shift" min="-12" max="12" step="1" value="0">
+            <div class="info-text">Altere os semitons para forçar a voz a entrar na escala correta da música.</div>
+        </div>
+
+        <div class="grid-buttons">
+            <button class="btn btn-primary" id="play-btn">Ouvir Trecho Configurado</button>
+            <button class="btn btn-accent" id="download-btn">Baixar Arquivo Editado</button>
+        </div>
     </div>
 </div>
 
@@ -147,75 +199,105 @@
     const statusMsg = document.getElementById('status-msg');
     const pitchSlider = document.getElementById('pitch-shift');
     const pitchVal = document.getElementById('pitch-val');
+    const startTimeInput = document.getElementById('start-time');
+    const endTimeInput = document.getElementById('end-time');
+    const totalDurationLabel = document.getElementById('total-duration');
     const playBtn = document.getElementById('play-btn');
+    const downloadBtn = document.getElementById('download-btn');
 
-    // Inicializa o contexto de áudio
     function initAudio() {
         if (!audioContext) {
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
         }
     }
 
-    // Carrega o arquivo de áudio
     fileInput.addEventListener('change', function(e) {
         initAudio();
         const file = e.target.files[0];
         if (!file) return;
 
         uploadText.innerText = file.name;
-        statusMsg.innerText = "Carregando e decodificando áudio...";
+        statusMsg.innerText = "Processando áudio para o estúdio...";
 
         const reader = new FileReader();
         reader.onload = function(event) {
             audioContext.decodeAudioData(event.target.result, function(buffer) {
                 audioBuffer = buffer;
-                statusMsg.innerText = "Áudio pronto para edição!";
+                totalDurationLabel.innerText = buffer.duration.toFixed(1);
+                startTimeInput.value = 0;
+                endTimeInput.value = buffer.duration.toFixed(1);
+                endTimeInput.max = buffer.duration;
+                
+                statusMsg.innerText = "Áudio carregado com sucesso!";
                 controls.style.display = 'block';
             }, function(err) {
-                statusMsg.innerText = "Erro ao ler arquivo de áudio.";
+                statusMsg.innerText = "Erro ao decodificar áudio.";
                 console.error(err);
             });
         };
         reader.readAsArrayBuffer(file);
     });
 
-    // Atualiza o valor do texto do slider
     pitchSlider.addEventListener('input', function() {
         pitchVal.innerText = this.value;
-        if (currentSource) {
-            // Aplica a mudança em tempo real se estiver tocando
-            // A fórmula matemática para calcular o semitom na taxa de reprodução é: 2 ^ (semitones / 12)
-            currentSource.playbackRate.value = Math.pow(2, this.value / 12);
-        }
     });
 
-    // Toca ou para o áudio ajustado
+    // Função auxiliar para cortar o pedaço do áudio selecionado
+    function getTrimmedBuffer(context, buffer, start, end) {
+        const rate = buffer.sampleRate;
+        const startOffset = start * rate;
+        const endOffset = end * rate;
+        const frameCount = endOffset - startOffset;
+
+        if (frameCount <= 0) return null;
+
+        const trimmedBuffer = context.createBuffer(buffer.numberOfChannels, frameCount, rate);
+        
+        for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
+            const channelData = buffer.getChannelData(channel);
+            const trimmedData = trimmedBuffer.getChannelData(channel);
+            for (let i = 0; i < frameCount; i++) {
+                trimmedData[i] = channelData[startOffset + i];
+            }
+        }
+        return trimmedBuffer;
+    }
+
+    // Tocar o áudio com as configurações
     playBtn.addEventListener('click', function() {
         initAudio();
 
-        if (playBtn.innerText === "Parar Áudio") {
+        if (playBtn.innerText === "Parar Reprodução") {
             stopAudio();
             return;
         }
 
         if (!audioBuffer) return;
 
-        // Cria a fonte de reprodução
-        currentSource = audioContext.createBufferSource();
-        currentSource.buffer = audioBuffer;
+        const start = parseFloat(startTimeInput.value);
+        const end = parseFloat(endTimeInput.value);
+        
+        // Corta o trecho do áudio selecionado pelo usuário
+        const targetBuffer = getTrimmedBuffer(audioContext, audioBuffer, start, end);
+        if (!targetBuffer) {
+            alert("Verifique os tempos selecionados.");
+            return;
+        }
 
-        // Aplica o valor atual do pitch (taxa de reprodução)
+        currentSource = audioContext.createBufferSource();
+        currentSource.buffer = targetBuffer;
+
+        // Efeito Auto-Pitch (Ajuste de afinação via taxa de reprodução)
         const semitones = parseFloat(pitchSlider.value);
         currentSource.playbackRate.value = Math.pow(2, semitones / 12);
 
-        // Conecta a saída de som nos alto-falantes
         currentSource.connect(audioContext.destination);
         currentSource.start(0);
         
-        playBtn.innerText = "Parar Áudio";
+        playBtn.innerText = "Parar Reprodução";
 
         currentSource.onended = function() {
-            playBtn.innerText = "Reproduzir Áudio Modificado";
+            playBtn.innerText = "Ouvir Trecho Configurado";
         };
     });
 
@@ -223,9 +305,111 @@
         if (currentSource) {
             currentSource.stop();
         }
-        playBtn.innerText = "Reproduzir Áudio Modificado";
+        playBtn.innerText = "Ouvir Trecho Configurado";
+    }
+
+    // CONFIGURAÇÃO PARA BAIXAR O ARQUIVO CONFIGURADO
+    downloadBtn.addEventListener('click', function() {
+        if (!audioBuffer) return;
+        statusMsg.innerText = "Preparando seu download...";
+
+        const start = parseFloat(startTimeInput.value);
+        const end = parseFloat(endTimeInput.value);
+        const semitones = parseFloat(pitchSlider.value);
+        
+        const targetBuffer = getTrimmedBuffer(audioContext, audioBuffer, start, end);
+        if (!targetBuffer) return;
+
+        // Cria o arquivo WAV para download
+        const wavBlob = bufferToWav(targetBuffer, semitones);
+        const url = URL.createObjectURL(wavBlob);
+        
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = 'brandtone_editado.wav';
+        anchor.click();
+        
+        statusMsg.innerText = "Download concluído!";
+    });
+
+    // Conversor Técnico de Áudio para Gerar o arquivo .WAV
+    function bufferToWav(buffer, pitchSemitones) {
+        const playbackRateFactor = Math.pow(2, pitchSemitones / 12);
+        const numOfChan = buffer.numberOfChannels;
+        const originalSampleRate = buffer.sampleRate;
+        // Altera o SampleRate simulando o processamento do pitch do Autotune
+        const sampleRate = originalSampleRate / playbackRateFactor; 
+        const format = 1; // PCM
+        const bitDepth = 16;
+        
+        let result;
+        if (numOfChan === 2) {
+            result = interleave(buffer.getChannelData(0), buffer.getChannelData(1));
+        } else {
+            result = buffer.getChannelData(0);
+        }
+        
+        const bufferLen = result.length * 2;
+        const ab = new ArrayBuffer(44 + bufferLen);
+        const view = new DataView(ab);
+        
+        /* RIFF identifier */
+        writeString(view, 0, 'RIFF');
+        /* file length */
+        view.setUint32(4, 36 + bufferLen, true);
+        /* RIFF type */
+        writeString(view, 8, 'WAVE');
+        /* format chunk identifier */
+        writeString(view, 12, 'fmt ');
+        /* format chunk length */
+        view.setUint32(16, 16, true);
+        /* sample format (raw) */
+        view.setUint16(20, format, true);
+        /* channel count */
+        view.setUint16(22, numOfChan, true);
+        /* sample rate */
+        view.setUint32(24, originalSampleRate, true);
+        /* byte rate (sample rate * block align) */
+        view.setUint32(28, originalSampleRate * numOfChan * (bitDepth / 8), true);
+        /* block align (channel count * bytes per sample) */
+        view.setUint16(32, numOfChan * (bitDepth / 8), true);
+        /* bits per sample */
+        view.setUint16(34, bitDepth, true);
+        /* data chunk identifier */
+        writeString(view, 36, 'data');
+        /* data chunk length */
+        view.setUint32(40, bufferLen, true);
+        
+        floatTo16BitPCM(view, 44, result);
+        
+        return new Blob([view], { type: 'audio/wav' });
+    }
+
+    function interleave(inputL, inputR) {
+        const length = inputL.length + inputR.length;
+        const result = new Float32Array(length);
+        let index = 0;
+        let inputIndex = 0;
+        while (index < length) {
+            result[index++] = inputL[inputIndex];
+            result[index++] = inputR[inputIndex];
+            inputIndex++;
+        }
+        return result;
+    }
+
+    function floatTo16BitPCM(output, offset, input) {
+        for (let i = 0; i < input.length; i++, offset += 2) {
+            let s = Math.max(-1, Math.min(1, input[i]));
+            output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+        }
+    }
+
+    function writeString(view, offset, string) {
+        for (let i = 0; i < string.length; i++) {
+            view.setUint8(offset + i, string.charCodeAt(i));
+        }
     }
 </script>
-
 </body>
 </html>
