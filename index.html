@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BrandTone - Estúdio de Afinação</title>
+    <title>BrandTone Studio</title>
     <style>
         :root {
-            --primary: #8b5cf6;
-            --primary-hover: #7c3aed;
-            --bg-dark: #0f172a;
-            --surface: #1e293b;
-            --text: #f8fafc;
-            --accent: #06b6d4;
+            --primary: #ff4757;
+            --primary-hover: #ff6b81;
+            --bg-dark: #090d16;
+            --surface: #131a26;
+            --surface-light: #1f2a3c;
+            --text: #f1f2f6;
+            --accent: #2ed573;
+            --selection: rgba(255, 71, 87, 0.3);
         }
 
         body {
@@ -26,165 +28,239 @@
             min-height: 100vh;
         }
 
-        .container {
+        .studio-container {
             background-color: var(--surface);
-            padding: 30px;
+            padding: 25px;
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
             width: 100%;
-            max-width: 600px;
+            max-width: 800px;
+            border: 1px solid #232e42;
         }
 
         h1 {
-            color: var(--primary);
+            color: var(--text);
             margin: 0 0 5px 0;
-            text-align: center;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h1 span {
+            color: var(--primary);
         }
 
         .subtitle {
-            font-size: 0.9rem;
-            color: #94a3b8;
-            margin-bottom: 25px;
-            text-align: center;
-        }
-
-        .upload-section {
-            border: 2px dashed #475569;
-            padding: 30px;
-            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #747d8c;
             margin-bottom: 20px;
-            cursor: pointer;
-            text-align: center;
-            transition: 0.3s;
         }
 
-        .upload-section:hover {
+        .upload-area {
+            border: 2px dashed #2f3542;
+            padding: 40px 20px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            background-color: rgba(0,0,0,0.2);
+        }
+
+        .upload-area:hover {
             border-color: var(--primary);
-            background-color: #243249;
+            background-color: rgba(255, 71, 87, 0.05);
         }
 
         input[type="file"] {
             display: none;
         }
 
-        .controls {
+        /* Estúdio de Tracks (Estilo BandLab) */
+        .workspace {
             display: none;
-            margin-top: 25px;
         }
 
-        .control-group {
+        .timeline-container {
+            position: relative;
+            background: #0b0f19;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            border: 1px solid #232e42;
+            height: 120px;
+            cursor: crosshair;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .selection-overlay {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            background-color: var(--selection);
+            border-left: 1px dashed var(--primary);
+            border-right: 1px dashed var(--primary);
+            z-index: 2;
+            pointer-events: none;
+            left: 0;
+            width: 0;
+        }
+
+        .playhead {
+            position: absolute;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background-color: #fff;
+            box-shadow: 0 0 8px #fff;
+            z-index: 3;
+            pointer-events: none;
+            left: 0;
+        }
+
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #a4b0be;
             margin-bottom: 20px;
-            background: #111827;
+            font-family: monospace;
+            background: #0b0f19;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .panel {
+            background: var(--surface-light);
             padding: 15px;
             border-radius: 8px;
-            border: 1px solid #374151;
         }
 
         label {
             display: block;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            color: #a4b0be;
             margin-bottom: 10px;
-            color: #cbd5e1;
-            font-weight: 600;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 0.5px;
         }
 
-        .range-inputs {
-            display: flex;
-            gap: 15px;
+        .pitch-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 10px;
+            text-align: center;
         }
 
-        .range-inputs div {
-            flex: 1;
-        }
-
-        select, input[type="range"], input[type="number"] {
+        input[type="range"] {
             width: 100%;
-            padding: 10px;
-            border-radius: 6px;
-            background: #334155;
-            border: 1px solid #475569;
-            color: white;
-            box-sizing: border-box;
+            accent-color: var(--primary);
+            background: #0b0f19;
+            height: 6px;
+            border-radius: 3px;
+            outline: none;
         }
 
-        .grid-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 20px;
+        .buttons-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
         }
 
         .btn {
             color: white;
             border: none;
-            padding: 14px;
+            padding: 12px;
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.95rem;
             transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        .btn-primary { background-color: var(--primary); }
-        .btn-primary:hover { background-color: var(--primary-hover); }
-        
-        .btn-accent { background-color: var(--accent); }
-        .btn-accent:hover { background-color: #0891b2; }
+        .btn-play { background-color: var(--primary); }
+        .btn-play:hover { background-color: var(--primary-hover); }
+        .btn-download { background-color: var(--accent); }
+        .btn-download:hover { background-color: #26af5f; }
 
         .status {
-            font-size: 0.9rem;
-            color: #10b981;
+            font-size: 0.85rem;
+            color: var(--accent);
             text-align: center;
             margin-top: 10px;
-            font-weight: 500;
         }
 
-        .info-text {
-            font-size: 0.8rem;
-            color: #94a3b8;
-            margin-top: 4px;
+        .tip {
+            font-size: 0.75rem;
+            color: #747d8c;
+            text-align: center;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>BrandTone PRO</h1>
-    <div class="subtitle">Auto-Pitch, Seleção de Faixa e Exportação de Áudio</div>
+<div class="studio-container">
+    <h1>BrandTone <span>Studio</span></h1>
+    <div class="subtitle">Clique e arraste na track para selecionar a região do Auto-Pitch</div>
 
-    <div class="upload-section" onclick="document.getElementById('audio-file').click()">
-        <p id="upload-text">Arraste ou clique para selecionar a voz/música (.mp3, .wav)</p>
+    <div class="upload-area" id="drop-zone" onclick="document.getElementById('audio-file').click()">
+        <p id="upload-text">Importar arquivo de voz ou música (.mp3, .wav)</p>
         <input type="file" id="audio-file" accept="audio/*">
     </div>
 
     <div id="status-msg" class="status"></div>
 
-    <div class="controls" id="editor-controls">
+    <div class="workspace" id="studio-workspace">
         
-        <div class="control-group">
-            <label>1. Selecionar Pedaço do Áudio (em segundos)</label>
-            <div class="range-inputs">
-                <div>
-                    <span class="info-text">Início:</span>
-                    <input type="number" id="start-time" value="0" min="0" step="0.1">
-                </div>
-                <div>
-                    <span class="info-text">Fim (Duração total: <span id="total-duration">0</span>s):</span>
-                    <input type="number" id="end-time" value="10" min="0" step="0.1">
-                </div>
+        <div class="timeline-container" id="timeline">
+            <canvas id="waveform"></canvas>
+            <div class="selection-overlay" id="selection"></div>
+            <div class="playhead" id="playhead"></div>
+        </div>
+
+        <div class="time-info">
+            <div>Tempo Atual: <span id="current-time">00:00.0</span></div>
+            <div>Seleção: <span id="selection-time">Toda a faixa</span></div>
+            <div>Duração Total: <span id="total-time">00:00.0</span></div>
+        </div>
+
+        <div class="controls-grid">
+            <div class="panel">
+                <label>Configuração de Auto-Pitch</label>
+                <div class="pitch-display"><span id="pitch-val">0</span> Semitons</div>
+                <input type="range" id="pitch-shift" min="-12" max="12" step="1" value="0">
+            </div>
+
+            <div class="panel buttons-panel">
+                <button class="btn btn-play" id="play-btn">▶ Reproduzir Seleção</button>
+                <button class="btn btn-download" id="download-btn">⬇ Exportar Áudio Ajustado</button>
             </div>
         </div>
-
-        <div class="control-group">
-            <label for="pitch-shift">2. Auto-Pitch / Correção de Tom (Semitons): <span id="pitch-val">0</span></label>
-            <input type="range" id="pitch-shift" min="-12" max="12" step="1" value="0">
-            <div class="info-text">Altere os semitons para forçar a voz a entrar na escala correta da música.</div>
-        </div>
-
-        <div class="grid-buttons">
-            <button class="btn btn-primary" id="play-btn">Ouvir Trecho Configurado</button>
-            <button class="btn btn-accent" id="download-btn">Baixar Arquivo Editado</button>
-        </div>
+        
+        <div class="tip">💡 Arraste o mouse horizontalmente sobre o gráfico para mudar a área de edição.</div>
     </div>
 </div>
 
@@ -192,67 +268,256 @@
     let audioContext;
     let audioBuffer;
     let currentSource;
+    let isPlaying = false;
+    let startTime = 0; // Tempo de início do áudio tocando
+    let playheadAnimation;
+    
+    // Dados de seleção de tempo
+    let selStartSec = 0;
+    let selEndSec = 0;
 
+    // Elementos da Interface
     const fileInput = document.getElementById('audio-file');
     const uploadText = document.getElementById('upload-text');
-    const controls = document.getElementById('editor-controls');
+    const dropZone = document.getElementById('drop-zone');
+    const workspace = document.getElementById('studio-workspace');
     const statusMsg = document.getElementById('status-msg');
+    const canvas = document.getElementById('waveform');
+    const timeline = document.getElementById('timeline');
+    const selectionOverlay = document.getElementById('selection');
+    const playhead = document.getElementById('playhead');
+    
+    const txtCurrentTime = document.getElementById('current-time');
+    const txtSelectionTime = document.getElementById('selection-time');
+    const txtTotalTime = document.getElementById('total-time');
     const pitchSlider = document.getElementById('pitch-shift');
     const pitchVal = document.getElementById('pitch-val');
-    const startTimeInput = document.getElementById('start-time');
-    const endTimeInput = document.getElementById('end-time');
-    const totalDurationLabel = document.getElementById('total-duration');
     const playBtn = document.getElementById('play-btn');
     const downloadBtn = document.getElementById('download-btn');
 
+    // Inicializar áudio nativo
     function initAudio() {
         if (!audioContext) {
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
         }
     }
 
+    // Carregar Arquivo
     fileInput.addEventListener('change', function(e) {
         initAudio();
         const file = e.target.files[0];
         if (!file) return;
 
         uploadText.innerText = file.name;
-        statusMsg.innerText = "Processando áudio para o estúdio...";
+        statusMsg.innerText = "Desenhando gráfico de ondas...";
 
         const reader = new FileReader();
         reader.onload = function(event) {
             audioContext.decodeAudioData(event.target.result, function(buffer) {
                 audioBuffer = buffer;
-                totalDurationLabel.innerText = buffer.duration.toFixed(1);
-                startTimeInput.value = 0;
-                endTimeInput.value = buffer.duration.toFixed(1);
-                endTimeInput.max = buffer.duration;
+                selStartSec = 0;
+                selEndSec = buffer.duration;
                 
-                statusMsg.innerText = "Áudio carregado com sucesso!";
-                controls.style.display = 'block';
-            }, function(err) {
-                statusMsg.innerText = "Erro ao decodificar áudio.";
-                console.error(err);
+                txtTotalTime.innerText = formatTime(buffer.duration);
+                txtSelectionTime.innerText = `0.0s até ${buffer.duration.toFixed(1)}s`;
+                
+                drawWaveform(buffer);
+                dropZone.style.display = 'none';
+                workspace.style.display = 'block';
+                statusMsg.innerText = "Áudio carregado na Timeline!";
             });
         };
         reader.readAsArrayBuffer(file);
     });
 
+    // Função que desenha o gráfico de ondas (As Tracks)
+    function drawWaveform(buffer) {
+        const ctx = canvas.getContext('2d');
+        const width = timeline.offsetWidth;
+        const height = timeline.offsetHeight;
+        
+        canvas.width = width;
+        canvas.height = height;
+
+        const leftChannel = buffer.getChannelData(0); 
+        const step = Math.ceil(leftChannel.length / width);
+        const amp = height / 2;
+
+        ctx.fillStyle = '#0b0f19';
+        ctx.fillRect(0, 0, width, height);
+
+        // Desenha a linha central cinza da trilha
+        ctx.strokeStyle = '#1f2a3c';
+        ctx.beginPath();
+        ctx.moveTo(0, amp);
+        ctx.lineTo(width, amp);
+        ctx.stroke();
+
+        // Desenha as barras de áudio em azul/ciano metálico estilo DAW
+        ctx.fillStyle = '#38bdf8';
+        for (let i = 0; i < width; i++) {
+            let min = 1.0;
+            let max = -1.0;
+            for (let j = 0; j < step; j++) {
+                let dat = leftChannel[(i * step) + j];
+                if (dat < min) min = dat;
+                if (dat > max) max = dat;
+            }
+            ctx.fillRect(i, (1 + min) * amp, 1.5, Math.max(1, (max - min) * amp));
+        }
+    }
+
+    // CONTROLE DE SELEÇÃO POR CLIQUE E ARRASTE DO MOUSE
+    let isSelecting = false;
+    let startX = 0;
+
+    timeline.addEventListener('mousedown', (e) => {
+        isSelecting = true;
+        const rect = timeline.getBoundingClientRect();
+        startX = e.clientX - rect.left;
+        selectionOverlay.style.left = startX + 'px';
+        selectionOverlay.style.width = '0px';
+    });
+
+    timeline.addEventListener('mousemove', (e) => {
+        if (!isSelecting) return;
+        const rect = timeline.getBoundingClientRect();
+        let currentX = e.clientX - rect.left;
+        
+        // Limites
+        if(currentX < 0) currentX = 0;
+        if(currentX > rect.width) currentX = rect.width;
+
+        const left = Math.min(startX, currentX);
+        const width = Math.abs(startX - currentX);
+
+        selectionOverlay.style.left = left + 'px';
+        selectionOverlay.style.width = width + 'px';
+
+        // Atualizar valores de tempo convertendo pixels para segundos
+        selStartSec = (left / rect.width) * audioBuffer.duration;
+        selEndSec = ((left + width) / rect.width) * audioBuffer.duration;
+        
+        txtSelectionTime.innerText = `${selStartSec.toFixed(1)}s até ${selEndSec.toFixed(1)}s`;
+    });
+
+    window.addEventListener('mouseup', () => {
+        isSelecting = false;
+    });
+
+    // Atualização visual do slider de tom
     pitchSlider.addEventListener('input', function() {
         pitchVal.innerText = this.value;
     });
 
-    // Função auxiliar para cortar o pedaço do áudio selecionado
+    // REPRODUÇÃO EM TEMPO REAL E CURSOR (PLAYHEAD)
+    playBtn.addEventListener('click', function() {
+        initAudio();
+
+        if (isPlaying) {
+            stopAudio();
+            return;
+        }
+
+        if (!audioBuffer) return;
+
+        // Se o usuário só clicou sem arrastar, toca a faixa toda
+        if(selStartSec === selEndSec || selEndSec === 0) {
+            selStartSec = 0;
+            selEndSec = audioBuffer.duration;
+        }
+
+        const durationToPlay = selEndSec - selStartSec;
+        const targetBuffer = getTrimmedBuffer(audioContext, audioBuffer, selStartSec, selEndSec);
+
+        currentSource = audioContext.createBufferSource();
+        currentSource.buffer = targetBuffer;
+
+        // Auto Pitch através do multiplicador de amostragem
+        const semitones = parseFloat(pitchSlider.value);
+        currentSource.playbackRate.value = Math.pow(2, semitones / 12);
+
+        currentSource.connect(audioContext.destination);
+        
+        startTime = audioContext.currentTime;
+        currentSource.start(0);
+        isPlaying = true;
+        playBtn.innerText = "⏹ Parar Estúdio";
+
+        // Mover o cursor branco em tempo real sincronizado
+        updatePlayhead(durationToPlay);
+
+        currentSource.onended = function() {
+            stopAudio();
+        };
+    });
+
+    function stopAudio() {
+        if (currentSource) {
+            try { currentSource.stop(); } catch(e){}
+        }
+        isPlaying = false;
+        playBtn.innerText = "▶ Reproduzir Seleção";
+        cancelAnimationFrame(playheadAnimation);
+        playhead.style.left = '0px';
+        txtCurrentTime.innerText = "00:00.0";
+    }
+
+    function updatePlayhead(duration) {
+        if (!isPlaying) return;
+
+        const elapsed = audioContext.currentTime - startTime;
+        const timelineWidth = timeline.offsetWidth;
+        
+        // Descobre a posição em pixels do início da seleção e do tamanho dela
+        const rect = timeline.getBoundingClientRect();
+        const startX = (selStartSec / audioBuffer.duration) * timelineWidth;
+        const endX = (selEndSec / audioBuffer.duration) * timelineWidth;
+        const selectionWidth = endX - startX;
+
+        // Calcula a posição do cursor proporcional ao tempo rodado
+        const currentProgress = elapsed / (duration / currentSource.playbackRate.value);
+        const currentPos = startX + (selectionWidth * currentProgress);
+
+        if (currentPos <= endX) {
+            playhead.style.left = currentPos + 'px';
+            txtCurrentTime.innerText = formatTime(selStartSec + (elapsed * currentSource.playbackRate.value));
+            playheadAnimation = requestAnimationFrame(() => updatePlayhead(duration));
+        } else {
+            playhead.style.left = startX + 'px';
+        }
+    }
+
+    // EXPORTAÇÃO E DOWNLOAD DO COMPLEMENTO
+    downloadBtn.addEventListener('click', function() {
+        if (!audioBuffer) return;
+        statusMsg.innerText = "Renderizando alterações na track...";
+
+        const targetBuffer = getTrimmedBuffer(audioContext, audioBuffer, selStartSec, selEndSec);
+        if (!targetBuffer) return;
+
+        const semitones = parseFloat(pitchSlider.value);
+        const wavBlob = bufferToWav(targetBuffer, semitones);
+        const url = URL.createObjectURL(wavBlob);
+        
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = 'brandtone_studio_track.wav';
+        anchor.click();
+        
+        statusMsg.innerText = "Track exportada com sucesso!";
+    });
+
+    // Utilitários de Tratamento de Áudio (Corte e Engenharia .WAV)
     function getTrimmedBuffer(context, buffer, start, end) {
         const rate = buffer.sampleRate;
-        const startOffset = start * rate;
-        const endOffset = end * rate;
+        const startOffset = Math.floor(start * rate);
+        const endOffset = Math.floor(end * rate);
         const frameCount = endOffset - startOffset;
 
         if (frameCount <= 0) return null;
 
         const trimmedBuffer = context.createBuffer(buffer.numberOfChannels, frameCount, rate);
-        
         for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
             const channelData = buffer.getChannelData(channel);
             const trimmedData = trimmedBuffer.getChannelData(channel);
@@ -263,123 +528,39 @@
         return trimmedBuffer;
     }
 
-    // Tocar o áudio com as configurações
-    playBtn.addEventListener('click', function() {
-        initAudio();
-
-        if (playBtn.innerText === "Parar Reprodução") {
-            stopAudio();
-            return;
-        }
-
-        if (!audioBuffer) return;
-
-        const start = parseFloat(startTimeInput.value);
-        const end = parseFloat(endTimeInput.value);
-        
-        // Corta o trecho do áudio selecionado pelo usuário
-        const targetBuffer = getTrimmedBuffer(audioContext, audioBuffer, start, end);
-        if (!targetBuffer) {
-            alert("Verifique os tempos selecionados.");
-            return;
-        }
-
-        currentSource = audioContext.createBufferSource();
-        currentSource.buffer = targetBuffer;
-
-        // Efeito Auto-Pitch (Ajuste de afinação via taxa de reprodução)
-        const semitones = parseFloat(pitchSlider.value);
-        currentSource.playbackRate.value = Math.pow(2, semitones / 12);
-
-        currentSource.connect(audioContext.destination);
-        currentSource.start(0);
-        
-        playBtn.innerText = "Parar Reprodução";
-
-        currentSource.onended = function() {
-            playBtn.innerText = "Ouvir Trecho Configurado";
-        };
-    });
-
-    function stopAudio() {
-        if (currentSource) {
-            currentSource.stop();
-        }
-        playBtn.innerText = "Ouvir Trecho Configurado";
+    function formatTime(seconds) {
+        const min = Math.floor(seconds / 60);
+        const sec = Math.floor(seconds % 60);
+        const ms = Math.floor((seconds % 1) * 10);
+        return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}.${ms}`;
     }
 
-    // CONFIGURAÇÃO PARA BAIXAR O ARQUIVO CONFIGURADO
-    downloadBtn.addEventListener('click', function() {
-        if (!audioBuffer) return;
-        statusMsg.innerText = "Preparando seu download...";
-
-        const start = parseFloat(startTimeInput.value);
-        const end = parseFloat(endTimeInput.value);
-        const semitones = parseFloat(pitchSlider.value);
-        
-        const targetBuffer = getTrimmedBuffer(audioContext, audioBuffer, start, end);
-        if (!targetBuffer) return;
-
-        // Cria o arquivo WAV para download
-        const wavBlob = bufferToWav(targetBuffer, semitones);
-        const url = URL.createObjectURL(wavBlob);
-        
-        const anchor = document.createElement('a');
-        anchor.href = url;
-        anchor.download = 'brandtone_editado.wav';
-        anchor.click();
-        
-        statusMsg.innerText = "Download concluído!";
-    });
-
-    // Conversor Técnico de Áudio para Gerar o arquivo .WAV
     function bufferToWav(buffer, pitchSemitones) {
         const playbackRateFactor = Math.pow(2, pitchSemitones / 12);
         const numOfChan = buffer.numberOfChannels;
         const originalSampleRate = buffer.sampleRate;
-        // Altera o SampleRate simulando o processamento do pitch do Autotune
         const sampleRate = originalSampleRate / playbackRateFactor; 
-        const format = 1; // PCM
+        const format = 1;
         const bitDepth = 16;
         
-        let result;
-        if (numOfChan === 2) {
-            result = interleave(buffer.getChannelData(0), buffer.getChannelData(1));
-        } else {
-            result = buffer.getChannelData(0);
-        }
-        
+        let result = numOfChan === 2 ? interleave(buffer.getChannelData(0), buffer.getChannelData(1)) : buffer.getChannelData(0);
         const bufferLen = result.length * 2;
         const ab = new ArrayBuffer(44 + bufferLen);
         const view = new DataView(ab);
         
-        /* RIFF identifier */
         writeString(view, 0, 'RIFF');
-        /* file length */
         view.setUint32(4, 36 + bufferLen, true);
-        /* RIFF type */
         writeString(view, 8, 'WAVE');
-        /* format chunk identifier */
         writeString(view, 12, 'fmt ');
-        /* format chunk length */
         view.setUint32(16, 16, true);
-        /* sample format (raw) */
         view.setUint16(20, format, true);
-        /* channel count */
         view.setUint16(22, numOfChan, true);
-        /* sample rate */
         view.setUint32(24, originalSampleRate, true);
-        /* byte rate (sample rate * block align) */
         view.setUint32(28, originalSampleRate * numOfChan * (bitDepth / 8), true);
-        /* block align (channel count * bytes per sample) */
         view.setUint16(32, numOfChan * (bitDepth / 8), true);
-        /* bits per sample */
         view.setUint16(34, bitDepth, true);
-        /* data chunk identifier */
         writeString(view, 36, 'data');
-        /* data chunk length */
         view.setUint32(40, bufferLen, true);
-        
         floatTo16BitPCM(view, 44, result);
         
         return new Blob([view], { type: 'audio/wav' });
@@ -388,8 +569,7 @@
     function interleave(inputL, inputR) {
         const length = inputL.length + inputR.length;
         const result = new Float32Array(length);
-        let index = 0;
-        let inputIndex = 0;
+        let index = 0, inputIndex = 0;
         while (index < length) {
             result[index++] = inputL[inputIndex];
             result[index++] = inputR[inputIndex];
