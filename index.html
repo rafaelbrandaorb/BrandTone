@@ -3,23 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BrandTone Studio - Ferramentas Livres</title>
+    <title>BrandTone Mix Editor - Estúdio Grátis</title>
     <style>
         :root {
             --brandlab-orange: #ff5722;
             --brandlab-orange-hover: #f4511e;
-            --bg-main: #0c0d12;
-            --bg-sidebar: #14161e;
-            --bg-track: #1a1d26;
-            --border-color: #262a36;
+            --bg-main: #121318;
+            --bg-sidebar: #191b22;
+            --bg-track: #1d202a;
+            --border-color: #2a2e3d;
             --text-color: #e2e8f0;
-            --text-muted: #6b7280;
+            --text-muted: #747d8c;
             --selection-color: rgba(255, 87, 34, 0.25);
-            --accent-cyan: #06b6d4;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-main);
             color: var(--text-color);
             margin: 0;
@@ -31,7 +30,7 @@
             user-select: none;
         }
 
-        /* BARRA SUPERIOR */
+        /* BARRA SUPERIOR (TRANSPORT BAR) */
         .top-bar {
             background-color: var(--bg-sidebar);
             border-bottom: 1px solid var(--border-color);
@@ -41,12 +40,12 @@
             justify-content: space-between;
             padding: 0 20px;
             box-sizing: border-box;
-            z-index: 5;
         }
 
         .logo {
             font-weight: 800;
             font-size: 1.2rem;
+            letter-spacing: 0.5px;
         }
 
         .logo span {
@@ -60,10 +59,10 @@
         }
 
         .btn-transport {
-            background: #222531;
+            background: #2b2e3c;
             border: 1px solid var(--border-color);
             color: white;
-            padding: 8px 18px;
+            padding: 8px 16px;
             border-radius: 20px;
             font-weight: 600;
             cursor: pointer;
@@ -72,7 +71,7 @@
         }
 
         .btn-transport:hover {
-            background: #2d3142;
+            background: #3a3f52;
         }
 
         .btn-play-active {
@@ -81,10 +80,10 @@
         }
 
         .btn-export {
-            background-color: #10b981;
+            background-color: #2ed573;
             border: none;
             color: white;
-            padding: 8px 18px;
+            padding: 8px 16px;
             border-radius: 20px;
             font-weight: 600;
             cursor: pointer;
@@ -92,22 +91,39 @@
         }
 
         .btn-export:hover {
-            background-color: #059669;
+            background-color: #26af5f;
+        }
+
+        .btn-choose {
+            background-color: var(--brandlab-orange);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 15px;
+            transition: 0.2s;
+        }
+
+        .btn-choose:hover {
+            background-color: var(--brandlab-orange-hover);
         }
 
         .lcd-display {
-            background-color: #06070a;
+            background-color: #0b0c0e;
             border: 1px solid var(--border-color);
             border-radius: 6px;
             padding: 6px 15px;
             font-family: monospace;
-            font-size: 0.85rem;
-            color: var(--accent-cyan);
+            font-size: 0.9rem;
+            color: #51e1ed;
             display: flex;
-            gap: 20px;
+            gap: 15px;
         }
 
-        /* ÁREA CENTRAL */
+        /* ÁREA CENTRAL DO ESTÚDIO */
         .main-studio {
             display: flex;
             flex: 1;
@@ -130,19 +146,15 @@
         }
 
         .upload-box {
-            border: 2px dashed #2d3142;
-            padding: 60px 100px;
-            border-radius: 16px;
+            border: 2px dashed #3a3f52;
+            padding: 50px 80px;
+            border-radius: 12px;
             text-align: center;
-            cursor: pointer;
             background: var(--bg-sidebar);
-            transition: 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .upload-box:hover {
-            border-color: var(--brandlab-orange);
-        }
-
+        /* TRACK TIMELINE */
         .editor-workspace {
             display: none;
             flex: 1;
@@ -153,15 +165,16 @@
         .track-row {
             display: flex;
             border-bottom: 1px solid var(--border-color);
-            height: 160px;
+            height: 140px;
             background-color: var(--bg-main);
         }
 
+        /* Cabeçalho da Track lateral */
         .track-header {
-            width: 240px;
+            width: 220px;
             background-color: var(--bg-sidebar);
             border-right: 1px solid var(--border-color);
-            padding: 15px;
+            padding: 12px;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
@@ -171,25 +184,28 @@
         .track-title {
             font-size: 0.85rem;
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .track-controls {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
         .track-buttons {
             display: flex;
-            gap: 6px;
+            gap: 5px;
         }
 
         .btn-track-opt {
-            background: #222531;
+            background: #2b2e3c;
             border: none;
-            color: #9ca3af;
-            width: 28px;
-            height: 28px;
+            color: var(--text-muted);
+            width: 26px;
+            height: 26px;
             border-radius: 4px;
             font-size: 0.75rem;
             font-weight: bold;
@@ -199,14 +215,15 @@
         .volume-fader-container {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .volume-fader {
             flex: 1;
-            accent-color: var(--accent-cyan) !important;
+            accent-color: #51e1ed !important;
         }
 
+        /* Área onde fica o gráfico da onda */
         .track-timeline {
             flex: 1;
             position: relative;
@@ -249,41 +266,61 @@
             left: 0;
         }
 
-        /* PAINEL INFERIOR DE COMPONENTES E EFEITOS LIBERADOS */
-        .bottom-fx-panel {
+        /* PAINEL INFERIOR DE CONFIGURAÇÃO */
+        .bottom-panel {
             background-color: var(--bg-sidebar);
             border-top: 1px solid var(--border-color);
-            flex: 1;
+            height: 130px;
             padding: 20px;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
             box-sizing: border-box;
-            overflow-y: auto;
+            display: flex;
+            align-items: center;
+            gap: 40px;
         }
 
-        .fx-card {
+        .pitch-card {
             background: var(--bg-main);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 12px 18px;
+            padding: 15px 25px;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            min-width: 350px;
         }
 
-        .fx-label {
-            font-size: 0.75rem;
+        .pitch-label {
+            font-size: 0.8rem;
             text-transform: uppercase;
-            font-weight: 700;
+            font-weight: bold;
             color: var(--text-muted);
-            margin-bottom: 5px;
-            display: flex;
-            justify-content: space-between;
+            letter-spacing: 0.5px;
         }
 
-        .fx-label span {
+        .pitch-value {
+            font-size: 1.6rem;
+            font-weight: 800;
             color: var(--brandlab-orange);
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .slider-wrapper {
+            flex: 1;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--brandlab-orange);
+            background: #2b2e3c;
+            height: 5px;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .tip-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
         }
 
         input[type="file"] {
@@ -294,7 +331,7 @@
 <body>
 
     <div class="top-bar">
-        <div class="logo">BrandTone <span>Studio XL</span></div>
+        <div class="logo">BrandTone <span>Studio</span></div>
         
         <div class="transport-controls">
             <button class="btn-transport" id="play-btn">▶ PLAY</button>
@@ -303,28 +340,35 @@
 
         <div class="lcd-display">
             <div>TEMPO: <span id="current-time">00:00.0</span></div>
-            <div>SELEÇÃO: <span id="selection-time">Trilha Completa</span></div>
+            <div>SELEÇÃO: <span id="selection-time">Trilha Inteira</span></div>
+            <div>BPM: <span>120</span></div>
         </div>
 
         <div>
-            <button class="btn-export" id="download-btn">EXPORTAR WAV INTEGRAL</button>
+            <button class="btn-export" id="download-btn">EXPORTAR MIX (GRÁTIS)</button>
         </div>
     </div>
 
     <div class="main-studio">
         
         <div class="upload-screen" id="upload-screen">
-            <div class="upload-box" onclick="document.getElementById('audio-file').click()">
-                <h2 style="margin-top:0; color:#fff;">Iniciar Estúdio Premium Livre</h2>
-                <p style="color:var(--text-muted); font-size: 0.9rem;">Todas as ferramentas de automação e correção estão desbloqueadas.</p>
+            <div class="upload-box">
+                <h2 style="margin-top:0; color:#fff;">Entrar no Estúdio Grátis</h2>
+                <p style="color:var(--text-muted); margin-bottom: 5px;">Clique no botão abaixo para importar seu áudio (.mp3, .wav):</p>
+                
+                <button type="button" class="btn-choose" onclick="document.getElementById('audio-file').click();">Escolher Arquivo</button>
                 <input type="file" id="audio-file" accept="audio/*">
+                
+                <div id="loading-msg" style="margin-top: 15px; color: #51e1ed; font-size: 0.9rem; display: none;">Lendo e processando as frequências do arquivo...</div>
             </div>
         </div>
 
         <div class="editor-workspace" id="editor-workspace">
             <div class="track-row">
                 <div class="track-header">
-                    <div class="track-title">🎤 Audio Master Track</div>
+                    <div class="track-title">
+                        🎤 Audio Track 1
+                    </div>
                     <div class="track-controls">
                         <div class="track-buttons">
                             <button class="btn-track-opt">M</button>
@@ -332,7 +376,7 @@
                             <button class="btn-track-opt" style="color:#ff4757;">●</button>
                         </div>
                         <div class="volume-fader-container">
-                            <span style="font-size:0.65rem; color:var(--text-muted);">VOL</span>
+                            <span style="font-size:0.7rem; color:var(--text-muted);">VOL</span>
                             <input type="range" class="volume-fader" id="volume-control" min="0" max="1" step="0.01" value="0.8">
                         </div>
                     </div>
@@ -345,25 +389,18 @@
                 </div>
             </div>
 
-            <div class="bottom-fx-panel">
-                <div class="fx-card">
-                    <div class="fx-label">Auto-Pitch <span id="pitch-val">0 semitons</span></div>
-                    <input type="range" id="pitch-shift" min="-12" max="12" step="1" value="0">
+            <div class="bottom-panel">
+                <div class="pitch-card">
+                    <div>
+                        <div class="pitch-label">Auto-Pitch</div>
+                        <div class="pitch-value"><span id="pitch-val">0</span></div>
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" id="pitch-shift" min="-12" max="12" step="1" value="0">
+                    </div>
                 </div>
-
-                <div class="fx-card">
-                    <div class="fx-label">Auto-Tune Speed <span id="speed-val">50ms</span></div>
-                    <input type="range" id="tune-speed" min="1" max="100" step="1" value="50">
-                </div>
-
-                <div class="fx-card">
-                    <div class="fx-label">Bass Booster <span id="bass-val">0 dB</span></div>
-                    <input type="range" id="bass-boost" min="0" max="12" step="1" value="0">
-                </div>
-
-                <div class="fx-card">
-                    <div class="fx-label">Playback Speed <span id="play-speed-val">1.0x</span></div>
-                    <input type="range" id="playback-speed" min="0.5" max="2.0" step="0.1" value="1.0">
+                <div class="tip-text">
+                    💡 <b>Ferramenta Completa e Grátis:</b> Selecione qualquer parte do gráfico com o mouse para focar a afinação de semitons. O salvamento em formato profissional .WAV não possui limites de uso.
                 </div>
             </div>
         </div>
@@ -374,8 +411,7 @@
     let audioContext;
     let audioBuffer;
     let currentSource;
-    let gainNode;
-    let bassFilterNode;
+    let gainNode; 
     let isPlaying = false;
     let startTime = 0;
     let playheadAnimation;
@@ -385,6 +421,7 @@
 
     const fileInput = document.getElementById('audio-file');
     const uploadScreen = document.getElementById('upload-screen');
+    const loadingMsg = document.getElementById('loading-msg');
     const workspace = document.getElementById('editor-workspace');
     const canvas = document.getElementById('waveform');
     const timeline = document.getElementById('timeline');
@@ -393,18 +430,9 @@
     
     const txtCurrentTime = document.getElementById('current-time');
     const txtSelectionTime = document.getElementById('selection-time');
-    
-    // Sliders
     const pitchSlider = document.getElementById('pitch-shift');
     const pitchVal = document.getElementById('pitch-val');
-    const tuneSpeedSlider = document.getElementById('tune-speed');
-    const speedVal = document.getElementById('speed-val');
-    const bassSlider = document.getElementById('bass-boost');
-    const bassVal = document.getElementById('bass-val');
-    const playSpeedSlider = document.getElementById('playback-speed');
-    const playSpeedVal = document.getElementById('play-speed-val');
     const volumeControl = document.getElementById('volume-control');
-    
     const playBtn = document.getElementById('play-btn');
     const stopBtn = document.getElementById('stop-btn');
     const downloadBtn = document.getElementById('download-btn');
@@ -413,33 +441,23 @@
         if (!audioContext) {
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
             gainNode = audioContext.createGain();
-            
-            // Criando filtro de graves (Lowpass/Low架) para o Bass Booster
-            bassFilterNode = audioContext.createBiquadFilter();
-            bassFilterNode.type = "lowshelf";
-            bassFilterNode.frequency.value = 200; // Frequência de graves
-            bassFilterNode.gain.value = parseFloat(bassSlider.value);
-
-            // Conexões de áudio em série
-            bassFilterNode.connect(gainNode);
             gainNode.connect(audioContext.destination);
         }
     }
 
-    // listeners de tempo real para os controles deslizantes
-    volumeControl.addEventListener('input', function() { if (gainNode) gainNode.gain.value = this.value; });
-    bassSlider.addEventListener('input', function() {
-        bassVal.innerText = this.value + " dB";
-        if (bassFilterNode) bassFilterNode.gain.value = parseFloat(this.value);
+    volumeControl.addEventListener('input', function() {
+        if (gainNode) {
+            gainNode.gain.value = this.value;
+        }
     });
-    pitchSlider.addEventListener('input', function() { pitchVal.innerText = this.value + " semitons"; });
-    tuneSpeedSlider.addEventListener('input', function() { speedVal.innerText = this.value + "ms"; });
-    playSpeedSlider.addEventListener('input', function() { playSpeedVal.innerText = this.value + "x"; });
 
     fileInput.addEventListener('change', function(e) {
         initAudio();
         const file = e.target.files[0];
         if (!file) return;
+
+        // Exibe mensagem de carregamento para arquivos grandes
+        loadingMsg.style.display = 'block';
 
         const reader = new FileReader();
         reader.onload = function(event) {
@@ -447,9 +465,13 @@
                 audioBuffer = buffer;
                 selStartSec = 0;
                 selEndSec = buffer.duration;
+                
                 drawWaveform(buffer);
                 uploadScreen.style.display = 'none';
                 workspace.style.display = 'flex';
+            }, function(err) {
+                alert("Erro ao ler o arquivo de áudio. Certifique-se de que não é um arquivo corrompido.");
+                loadingMsg.style.display = 'none';
             });
         };
         reader.readAsArrayBuffer(file);
@@ -459,6 +481,7 @@
         const ctx = canvas.getContext('2d');
         const width = timeline.offsetWidth;
         const height = timeline.offsetHeight;
+        
         canvas.width = width;
         canvas.height = height;
 
@@ -467,15 +490,22 @@
         const amp = height / 2;
 
         ctx.clearRect(0, 0, width, height);
-        ctx.strokeStyle = '#1e2230';
+
+        // Grid visual
+        ctx.strokeStyle = '#232733';
         ctx.lineWidth = 1;
         for(let g = 0; g < width; g += 60) {
-            ctx.beginPath(); ctx.moveTo(g, 0); ctx.lineTo(g, height); ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(g, 0);
+            ctx.lineTo(g, height);
+            ctx.stroke();
         }
 
+        // Gráfico das trilhas
         ctx.fillStyle = '#ff5722';
         for (let i = 0; i < width; i++) {
-            let min = 1.0, max = -1.0;
+            let min = 1.0;
+            let max = -1.0;
             for (let j = 0; j < step; j++) {
                 let dat = leftChannel[(i * step) + j];
                 if (dat < min) min = dat;
@@ -485,7 +515,9 @@
         }
     }
 
-    let isSelecting = false, startX = 0;
+    let isSelecting = false;
+    let startX = 0;
+
     timeline.addEventListener('mousedown', (e) => {
         isSelecting = true;
         const rect = timeline.getBoundingClientRect();
@@ -498,25 +530,37 @@
         if (!isSelecting) return;
         const rect = timeline.getBoundingClientRect();
         let currentX = e.clientX - rect.left;
+        
         if(currentX < 0) currentX = 0;
         if(currentX > rect.width) currentX = rect.width;
 
         const left = Math.min(startX, currentX);
         const width = Math.abs(startX - currentX);
+
         selectionBox.style.left = left + 'px';
         selectionBox.style.width = width + 'px';
 
         selStartSec = (left / rect.width) * audioBuffer.duration;
         selEndSec = ((left + width) / rect.width) * audioBuffer.duration;
+        
         txtSelectionTime.innerText = `${selStartSec.toFixed(1)}s - ${selEndSec.toFixed(1)}s`;
     });
 
-    window.addEventListener('mouseup', () => { isSelecting = false; });
+    window.addEventListener('mouseup', () => {
+        isSelecting = false;
+    });
 
-    // ENGENHARIA DE REPRODUÇÃO COM OS EFEITOS ATIVOS
+    pitchSlider.addEventListener('input', function() {
+        pitchVal.innerText = this.value;
+    });
+
+    // SISTEMA DE REPRODUÇÃO
     playBtn.addEventListener('click', function() {
         initAudio();
-        if (isPlaying) { stopAudio(); return; }
+        if (isPlaying) {
+            stopAudio();
+            return;
+        }
         if (!audioBuffer) return;
 
         if(selStartSec === selEndSec || selEndSec === 0) {
@@ -528,3 +572,159 @@
         const targetBuffer = getTrimmedBuffer(audioContext, audioBuffer, selStartSec, selEndSec);
 
         currentSource = audioContext.createBufferSource();
+        currentSource.buffer = targetBuffer;
+
+        const semitones = parseFloat(pitchSlider.value);
+        currentSource.playbackRate.value = Math.pow(2, semitones / 12);
+
+        currentSource.connect(gainNode);
+        gainNode.gain.value = volumeControl.value;
+        
+        startTime = audioContext.currentTime;
+        currentSource.start(0);
+        isPlaying = true;
+        playBtn.innerText = "⏸ PAUSE";
+        playBtn.classList.add('btn-play-active');
+
+        updatePlayhead(durationToPlay);
+
+        currentSource.onended = function() {
+            stopAudio();
+        };
+    });
+
+    stopBtn.addEventListener('click', stopAudio);
+
+    function stopAudio() {
+        if (currentSource) {
+            try { currentSource.stop(); } catch(e){}
+        }
+        isPlaying = false;
+        playBtn.innerText = "▶ PLAY";
+        playBtn.classList.remove('btn-play-active');
+        cancelAnimationFrame(playheadAnimation);
+        playhead.style.left = '0px';
+        txtCurrentTime.innerText = "00:00.0";
+    }
+
+    function updatePlayhead(duration) {
+        if (!isPlaying) return;
+
+        const elapsed = audioContext.currentTime - startTime;
+        const timelineWidth = timeline.offsetWidth;
+        
+        const startX = (selStartSec / audioBuffer.duration) * timelineWidth;
+        const endX = (selEndSec / audioBuffer.duration) * timelineWidth;
+        const selectionWidth = endX - startX;
+
+        const currentProgress = elapsed / (duration / currentSource.playbackRate.value);
+        const currentPos = startX + (selectionWidth * currentProgress);
+
+        if (currentPos <= endX) {
+            playhead.style.left = currentPos + 'px';
+            txtCurrentTime.innerText = formatTime(selStartSec + (elapsed * currentSource.playbackRate.value));
+            playheadAnimation = requestAnimationFrame(() => updatePlayhead(duration));
+        } else {
+            playhead.style.left = startX + 'px';
+        }
+    }
+
+    downloadBtn.addEventListener('click', function() {
+        if (!audioBuffer) return;
+        const targetBuffer = getTrimmedBuffer(audioContext, audioBuffer, selStartSec, selEndSec);
+        if (!targetBuffer) return;
+
+        const semitones = parseFloat(pitchSlider.value);
+        const wavBlob = bufferToWav(targetBuffer, semitones);
+        const url = URL.createObjectURL(wavBlob);
+        
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = 'brandtone_mix_gratis.wav';
+        anchor.click();
+    });
+
+    function getTrimmedBuffer(context, buffer, start, end) {
+        const rate = buffer.sampleRate;
+        const startOffset = Math.floor(start * rate);
+        const endOffset = Math.floor(end * rate);
+        const frameCount = endOffset - startOffset;
+
+        if (frameCount <= 0) return null;
+
+        const trimmedBuffer = context.createBuffer(buffer.numberOfChannels, frameCount, rate);
+        for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
+            const channelData = buffer.getChannelData(channel);
+            const trimmedData = trimmedBuffer.getChannelData(channel);
+            for (let i = 0; i < frameCount; i++) {
+                trimmedData[i] = channelData[startOffset + i];
+            }
+        }
+        return trimmedBuffer;
+    }
+
+    function formatTime(seconds) {
+        const min = Math.floor(seconds / 60);
+        const sec = Math.floor(seconds % 60);
+        const ms = Math.floor((seconds % 1) * 10);
+        return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}.${ms}`;
+    }
+
+    function bufferToWav(buffer, pitchSemitones) {
+        const playbackRateFactor = Math.pow(2, pitchSemitones / 12);
+        const numOfChan = buffer.numberOfChannels;
+        const originalSampleRate = buffer.sampleRate;
+        const format = 1;
+        const bitDepth = 16;
+        
+        let result = numOfChan === 2 ? interleave(buffer.getChannelData(0), buffer.getChannelData(1)) : buffer.getChannelData(0);
+        const bufferLen = result.length * 2;
+        const ab = new ArrayBuffer(44 + bufferLen);
+        const view = new DataView(ab);
+        
+        writeString(view, 0, 'RIFF');
+        view.setUint32(4, 36 + bufferLen, true);
+        writeString(view, 8, 'WAVE');
+        writeString(view, 12, 'fmt ');
+        view.setUint32(16, 16, true);
+        view.setUint16(20, format, true);
+        view.setUint16(22, numOfChan, true);
+        view.setUint32(24, originalSampleRate, true);
+        view.setUint32(28, originalSampleRate * numOfChan * (bitDepth / 8), true);
+        view.setUint16(32, numOfChan * (bitDepth / 8), true);
+        view.setUint16(34, bitDepth, true);
+        writeString(view, 36, 'data');
+        view.setUint32(40, bufferLen, true);
+        floatTo16BitPCM(view, 44, result);
+        
+        return new Blob([view], { type: 'audio/wav' });
+    }
+
+    // Intercalador para arquivos estéreo
+    function interleave(inputL, inputR) {
+        const length = inputL.length + inputR.length;
+        const result = new Float32Array(length);
+        let index = 0, inputIndex = 0;
+        while (index < length) {
+            result[index++] = inputL[inputIndex];
+            result[index++] = inputR[inputIndex];
+            inputIndex++;
+        }
+        return result;
+    }
+
+    function floatTo16BitPCM(output, offset, input) {
+        for (let i = 0; i < input.length; i++, offset += 2) {
+            let s = Math.max(-1, Math.min(1, input[i]));
+            output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+        }
+    }
+
+    function writeString(view, offset, string) {
+        for (let i = 0; i < string.length; i++) {
+            view.setUint8(offset + i, string.charCodeAt(i));
+        }
+    }
+</script>
+</body>
+</html>
