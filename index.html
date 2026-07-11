@@ -3,93 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BrandTone Studio</title>
+    <title>BrandTone Mix Editor</title>
     <style>
         :root {
-            --primary: #ff4757;
-            --primary-hover: #ff6b81;
-            --bg-dark: #090d16;
-            --surface: #131a26;
-            --surface-light: #1f2a3c;
-            --text: #f1f2f6;
-            --accent: #2ed573;
-            --selection: rgba(255, 71, 87, 0.3);
+            --brandlab-orange: #ff5722;
+            --brandlab-orange-hover: #f4511e;
+            --bg-main: #121318;
+            --bg-sidebar: #191b22;
+            --bg-track: #1d202a;
+            --border-color: #2a2e3d;
+            --text-color: #e2e8f0;
+            --text-muted: #747d8c;
+            --selection-color: rgba(255, 87, 34, 0.25);
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-color);
             margin: 0;
-            padding: 20px;
+            padding: 0;
             display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* BARRA SUPERIOR (TRANSPORT BAR) */
+        .top-bar {
+            background-color: var(--bg-sidebar);
+            border-bottom: 1px solid var(--border-color);
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.2rem;
+            letter-spacing: 0.5px;
+        }
+
+        .logo span {
+            color: var(--brandlab-orange);
+        }
+
+        .transport-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-transport {
+            background: #2b2e3c;
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+
+        .btn-transport:hover {
+            background: #3a3f52;
+        }
+
+        .btn-play-active {
+            background-color: var(--brandlab-orange) !important;
+            border-color: var(--brandlab-orange);
+        }
+
+        .btn-export {
+            background-color: #2ed573;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .btn-export:hover {
+            background-color: #26af5f;
+        }
+
+        .lcd-display {
+            background-color: #0b0c0e;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 6px 15px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #51e1ed;
+            display: flex;
+            gap: 15px;
+        }
+
+        /* ÁREA CENTRAL DO ESTÚDIO */
+        .main-studio {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .upload-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-main);
+            display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            z-index: 10;
         }
 
-        .studio-container {
-            background-color: var(--surface);
-            padding: 25px;
-            border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            width: 100%;
-            max-width: 800px;
-            border: 1px solid #232e42;
-        }
-
-        h1 {
-            color: var(--text);
-            margin: 0 0 5px 0;
-            font-size: 1.8rem;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        h1 span {
-            color: var(--primary);
-        }
-
-        .subtitle {
-            font-size: 0.85rem;
-            color: #747d8c;
-            margin-bottom: 20px;
-        }
-
-        .upload-area {
-            border: 2px dashed #2f3542;
-            padding: 40px 20px;
-            border-radius: 8px;
+        .upload-box {
+            border: 2px dashed #3a3f52;
+            padding: 50px 80px;
+            border-radius: 12px;
             text-align: center;
             cursor: pointer;
+            background: var(--bg-sidebar);
             transition: 0.3s;
-            background-color: rgba(0,0,0,0.2);
         }
 
-        .upload-area:hover {
-            border-color: var(--primary);
-            background-color: rgba(255, 71, 87, 0.05);
+        .upload-box:hover {
+            border-color: var(--brandlab-orange);
         }
 
-        input[type="file"] {
+        /* TRACK TIMELINE (ESTILO BANDLAB) */
+        .editor-workspace {
             display: none;
+            flex: 1;
+            flex-direction: column;
+            width: 100%;
         }
 
-        /* Estúdio de Tracks (Estilo BandLab) */
-        .workspace {
-            display: none;
+        .track-row {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            height: 140px;
+            background-color: var(--bg-main);
         }
 
-        .timeline-container {
+        /* Cabeçalho da Track lateral */
+        .track-header {
+            width: 220px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            padding: 15px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .track-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .track-controls {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-track-opt {
+            background: #2b2e3c;
+            border: none;
+            color: var(--text-muted);
+            width: 26px;
+            height: 26px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Área onde fica o gráfico da onda */
+        .track-timeline {
+            flex: 1;
             position: relative;
-            background: #0b0f19;
-            border-radius: 8px;
-            margin-bottom: 15px;
+            background-color: var(--bg-track);
             overflow: hidden;
-            border: 1px solid #232e42;
-            height: 120px;
             cursor: crosshair;
         }
 
@@ -102,17 +212,17 @@
             z-index: 1;
         }
 
-        .selection-overlay {
+        .selection-box {
             position: absolute;
             top: 0;
             height: 100%;
-            background-color: var(--selection);
-            border-left: 1px dashed var(--primary);
-            border-right: 1px dashed var(--primary);
+            background-color: var(--selection-color);
+            border-left: 1px solid var(--brandlab-orange);
+            border-right: 1px solid var(--brandlab-orange);
             z-index: 2;
             pointer-events: none;
-            left: 0;
             width: 0;
+            left: 0;
         }
 
         .playhead {
@@ -120,196 +230,180 @@
             top: 0;
             width: 2px;
             height: 100%;
-            background-color: #fff;
-            box-shadow: 0 0 8px #fff;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px #fff;
             z-index: 3;
             pointer-events: none;
             left: 0;
         }
 
-        .time-info {
+        /* PAINEL INFERIOR DE CONFIGURAÇÃO */
+        .bottom-panel {
+            background-color: var(--bg-sidebar);
+            border-top: 1px solid var(--border-color);
+            height: 130px;
+            padding: 20px;
+            box-sizing: border-box;
             display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            color: #a4b0be;
-            margin-bottom: 20px;
-            font-family: monospace;
-            background: #0b0f19;
-            padding: 5px 10px;
-            border-radius: 4px;
+            align-items: center;
+            gap: 40px;
         }
 
-        .controls-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .panel {
-            background: var(--surface-light);
-            padding: 15px;
+        .pitch-card {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            min-width: 350px;
         }
 
-        label {
-            display: block;
-            font-size: 0.85rem;
-            color: #a4b0be;
-            margin-bottom: 10px;
+        .pitch-label {
+            font-size: 0.8rem;
             text-transform: uppercase;
             font-weight: bold;
+            color: var(--text-muted);
             letter-spacing: 0.5px;
         }
 
-        .pitch-display {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--primary);
-            margin-bottom: 10px;
+        .pitch-value {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--brandlab-orange);
+            min-width: 60px;
             text-align: center;
+        }
+
+        .slider-wrapper {
+            flex: 1;
         }
 
         input[type="range"] {
             width: 100%;
-            accent-color: var(--primary);
-            background: #0b0f19;
-            height: 6px;
+            accent-color: var(--brandlab-orange);
+            background: #2b2e3c;
+            height: 5px;
             border-radius: 3px;
             outline: none;
         }
 
-        .buttons-panel {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: 10px;
+        .tip-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
         }
 
-        .btn {
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-play { background-color: var(--primary); }
-        .btn-play:hover { background-color: var(--primary-hover); }
-        .btn-download { background-color: var(--accent); }
-        .btn-download:hover { background-color: #26af5f; }
-
-        .status {
-            font-size: 0.85rem;
-            color: var(--accent);
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        .tip {
-            font-size: 0.75rem;
-            color: #747d8c;
-            text-align: center;
-            margin-top: 15px;
+        input[type="file"] {
+            display: none;
         }
     </style>
 </head>
 <body>
 
-<div class="studio-container">
-    <h1>BrandTone <span>Studio</span></h1>
-    <div class="subtitle">Clique e arraste na track para selecionar a região do Auto-Pitch</div>
+    <div class="top-bar">
+        <div class="logo">BrandTone <span>Studio</span></div>
+        
+        <div class="transport-controls">
+            <button class="btn-transport" id="play-btn">▶ PLAY</button>
+            <button class="btn-transport" id="stop-btn">◼ STOP</button>
+        </div>
 
-    <div class="upload-area" id="drop-zone" onclick="document.getElementById('audio-file').click()">
-        <p id="upload-text">Importar arquivo de voz ou música (.mp3, .wav)</p>
-        <input type="file" id="audio-file" accept="audio/*">
+        <div class="lcd-display">
+            <div>TEMPO: <span id="current-time">00:00.0</span></div>
+            <div>SELEÇÃO: <span id="selection-time">Trilha Inteira</span></div>
+        </div>
+
+        <div>
+            <button class="btn-export" id="download-btn">EXPORTAR MIX</button>
+        </div>
     </div>
 
-    <div id="status-msg" class="status"></div>
-
-    <div class="workspace" id="studio-workspace">
+    <div class="main-studio">
         
-        <div class="timeline-container" id="timeline">
-            <canvas id="waveform"></canvas>
-            <div class="selection-overlay" id="selection"></div>
-            <div class="playhead" id="playhead"></div>
-        </div>
-
-        <div class="time-info">
-            <div>Tempo Atual: <span id="current-time">00:00.0</span></div>
-            <div>Seleção: <span id="selection-time">Toda a faixa</span></div>
-            <div>Duração Total: <span id="total-time">00:00.0</span></div>
-        </div>
-
-        <div class="controls-grid">
-            <div class="panel">
-                <label>Configuração de Auto-Pitch</label>
-                <div class="pitch-display"><span id="pitch-val">0</span> Semitons</div>
-                <input type="range" id="pitch-shift" min="-12" max="12" step="1" value="0">
-            </div>
-
-            <div class="panel buttons-panel">
-                <button class="btn btn-play" id="play-btn">▶ Reproduzir Seleção</button>
-                <button class="btn btn-download" id="download-btn">⬇ Exportar Áudio Ajustado</button>
+        <div class="upload-screen" id="upload-screen">
+            <div class="upload-box" onclick="document.getElementById('audio-file').click()">
+                <h2 style="margin-top:0; color:#fff;">Entrar no Estúdio</h2>
+                <p style="color:var(--text-muted);">Clique aqui para importar sua faixa de áudio ou voz (.mp3, .wav)</p>
+                <input type="file" id="audio-file" accept="audio/*">
             </div>
         </div>
-        
-        <div class="tip">💡 Arraste o mouse horizontalmente sobre o gráfico para mudar a área de edição.</div>
+
+        <div class="editor-workspace" id="editor-workspace">
+            <div class="track-row">
+                <div class="track-header">
+                    <div class="track-title">
+                        🎤 Audio Track 1
+                    </div>
+                    <div class="track-controls">
+                        <button class="btn-track-opt">M</button>
+                        <button class="btn-track-opt">S</button>
+                        <button class="btn-track-opt" style="color:#ff4757;">●</button>
+                    </div>
+                </div>
+
+                <div class="track-timeline" id="timeline">
+                    <canvas id="waveform"></canvas>
+                    <div class="selection-box" id="selection"></div>
+                    <div class="playhead" id="playhead"></div>
+                </div>
+            </div>
+
+            <div class="bottom-panel">
+                <div class="pitch-card">
+                    <div>
+                        <div class="pitch-label">Auto-Pitch</div>
+                        <div class="pitch-value"><span id="pitch-val">0</span></div>
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" id="pitch-shift" min="-12" max="12" step="1" value="0">
+                    </div>
+                </div>
+                <div class="tip-text">
+                    💡 <b>Como no BandLab:</b> Clique e arraste o mouse sobre o gráfico escuro para destacar uma área específica da voz que deseja afinar.
+                </div>
+            </div>
+        </div>
+
     </div>
-</div>
 
 <script>
     let audioContext;
     let audioBuffer;
     let currentSource;
     let isPlaying = false;
-    let startTime = 0; // Tempo de início do áudio tocando
+    let startTime = 0;
     let playheadAnimation;
     
-    // Dados de seleção de tempo
     let selStartSec = 0;
     let selEndSec = 0;
 
-    // Elementos da Interface
     const fileInput = document.getElementById('audio-file');
-    const uploadText = document.getElementById('upload-text');
-    const dropZone = document.getElementById('drop-zone');
-    const workspace = document.getElementById('studio-workspace');
-    const statusMsg = document.getElementById('status-msg');
+    const uploadScreen = document.getElementById('upload-screen');
+    const workspace = document.getElementById('editor-workspace');
     const canvas = document.getElementById('waveform');
     const timeline = document.getElementById('timeline');
-    const selectionOverlay = document.getElementById('selection');
+    const selectionBox = document.getElementById('selection');
     const playhead = document.getElementById('playhead');
     
     const txtCurrentTime = document.getElementById('current-time');
     const txtSelectionTime = document.getElementById('selection-time');
-    const txtTotalTime = document.getElementById('total-time');
     const pitchSlider = document.getElementById('pitch-shift');
     const pitchVal = document.getElementById('pitch-val');
     const playBtn = document.getElementById('play-btn');
+    const stopBtn = document.getElementById('stop-btn');
     const downloadBtn = document.getElementById('download-btn');
 
-    // Inicializar áudio nativo
     function initAudio() {
         if (!audioContext) {
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
         }
     }
 
-    // Carregar Arquivo
     fileInput.addEventListener('change', function(e) {
         initAudio();
         const file = e.target.files[0];
         if (!file) return;
-
-        uploadText.innerText = file.name;
-        statusMsg.innerText = "Desenhando gráfico de ondas...";
 
         const reader = new FileReader();
         reader.onload = function(event) {
@@ -318,19 +412,14 @@
                 selStartSec = 0;
                 selEndSec = buffer.duration;
                 
-                txtTotalTime.innerText = formatTime(buffer.duration);
-                txtSelectionTime.innerText = `0.0s até ${buffer.duration.toFixed(1)}s`;
-                
                 drawWaveform(buffer);
-                dropZone.style.display = 'none';
-                workspace.style.display = 'block';
-                statusMsg.innerText = "Áudio carregado na Timeline!";
+                uploadScreen.style.display = 'none';
+                workspace.style.display = 'flex';
             });
         };
         reader.readAsArrayBuffer(file);
     });
 
-    // Função que desenha o gráfico de ondas (As Tracks)
     function drawWaveform(buffer) {
         const ctx = canvas.getContext('2d');
         const width = timeline.offsetWidth;
@@ -343,18 +432,20 @@
         const step = Math.ceil(leftChannel.length / width);
         const amp = height / 2;
 
-        ctx.fillStyle = '#0b0f19';
-        ctx.fillRect(0, 0, width, height);
+        ctx.clearRect(0, 0, width, height);
 
-        // Desenha a linha central cinza da trilha
-        ctx.strokeStyle = '#1f2a3c';
-        ctx.beginPath();
-        ctx.moveTo(0, amp);
-        ctx.lineTo(width, amp);
-        ctx.stroke();
+        // Desenhar linhas de grade estilo DAW de fundo
+        ctx.strokeStyle = '#232733';
+        ctx.lineWidth = 1;
+        for(let g = 0; g < width; g += 60) {
+            ctx.beginPath();
+            ctx.moveTo(g, 0);
+            ctx.lineTo(g, height);
+            ctx.stroke();
+        }
 
-        // Desenha as barras de áudio em azul/ciano metálico estilo DAW
-        ctx.fillStyle = '#38bdf8';
+        // Desenhar as ondas simétricas em laranja BandLab
+        ctx.fillStyle = '#ff5722';
         for (let i = 0; i < width; i++) {
             let min = 1.0;
             let max = -1.0;
@@ -363,11 +454,11 @@
                 if (dat < min) min = dat;
                 if (dat > max) max = dat;
             }
-            ctx.fillRect(i, (1 + min) * amp, 1.5, Math.max(1, (max - min) * amp));
+            ctx.fillRect(i, (1 + min) * amp, 2, Math.max(1, (max - min) * amp));
         }
     }
 
-    // CONTROLE DE SELEÇÃO POR CLIQUE E ARRASTE DO MOUSE
+    // CLIQUE E ARRASTE NA TIMELINE
     let isSelecting = false;
     let startX = 0;
 
@@ -375,8 +466,8 @@
         isSelecting = true;
         const rect = timeline.getBoundingClientRect();
         startX = e.clientX - rect.left;
-        selectionOverlay.style.left = startX + 'px';
-        selectionOverlay.style.width = '0px';
+        selectionBox.style.left = startX + 'px';
+        selectionBox.style.width = '0px';
     });
 
     timeline.addEventListener('mousemove', (e) => {
@@ -384,44 +475,38 @@
         const rect = timeline.getBoundingClientRect();
         let currentX = e.clientX - rect.left;
         
-        // Limites
         if(currentX < 0) currentX = 0;
         if(currentX > rect.width) currentX = rect.width;
 
         const left = Math.min(startX, currentX);
         const width = Math.abs(startX - currentX);
 
-        selectionOverlay.style.left = left + 'px';
-        selectionOverlay.style.width = width + 'px';
+        selectionBox.style.left = left + 'px';
+        selectionBox.style.width = width + 'px';
 
-        // Atualizar valores de tempo convertendo pixels para segundos
         selStartSec = (left / rect.width) * audioBuffer.duration;
         selEndSec = ((left + width) / rect.width) * audioBuffer.duration;
         
-        txtSelectionTime.innerText = `${selStartSec.toFixed(1)}s até ${selEndSec.toFixed(1)}s`;
+        txtSelectionTime.innerText = `${selStartSec.toFixed(1)}s - ${selEndSec.toFixed(1)}s`;
     });
 
     window.addEventListener('mouseup', () => {
         isSelecting = false;
     });
 
-    // Atualização visual do slider de tom
     pitchSlider.addEventListener('input', function() {
         pitchVal.innerText = this.value;
     });
 
-    // REPRODUÇÃO EM TEMPO REAL E CURSOR (PLAYHEAD)
+    // SISTEMA DE REPRODUÇÃO
     playBtn.addEventListener('click', function() {
         initAudio();
-
         if (isPlaying) {
             stopAudio();
             return;
         }
-
         if (!audioBuffer) return;
 
-        // Se o usuário só clicou sem arrastar, toca a faixa toda
         if(selStartSec === selEndSec || selEndSec === 0) {
             selStartSec = 0;
             selEndSec = audioBuffer.duration;
@@ -433,7 +518,6 @@
         currentSource = audioContext.createBufferSource();
         currentSource.buffer = targetBuffer;
 
-        // Auto Pitch através do multiplicador de amostragem
         const semitones = parseFloat(pitchSlider.value);
         currentSource.playbackRate.value = Math.pow(2, semitones / 12);
 
@@ -442,9 +526,9 @@
         startTime = audioContext.currentTime;
         currentSource.start(0);
         isPlaying = true;
-        playBtn.innerText = "⏹ Parar Estúdio";
+        playBtn.innerText = "⏸ PAUSE";
+        playBtn.classList.add('btn-play-active');
 
-        // Mover o cursor branco em tempo real sincronizado
         updatePlayhead(durationToPlay);
 
         currentSource.onended = function() {
@@ -452,12 +536,15 @@
         };
     });
 
+    stopBtn.addEventListener('click', stopAudio);
+
     function stopAudio() {
         if (currentSource) {
             try { currentSource.stop(); } catch(e){}
         }
         isPlaying = false;
-        playBtn.innerText = "▶ Reproduzir Seleção";
+        playBtn.innerText = "▶ PLAY";
+        playBtn.classList.remove('btn-play-active');
         cancelAnimationFrame(playheadAnimation);
         playhead.style.left = '0px';
         txtCurrentTime.innerText = "00:00.0";
@@ -469,13 +556,10 @@
         const elapsed = audioContext.currentTime - startTime;
         const timelineWidth = timeline.offsetWidth;
         
-        // Descobre a posição em pixels do início da seleção e do tamanho dela
-        const rect = timeline.getBoundingClientRect();
         const startX = (selStartSec / audioBuffer.duration) * timelineWidth;
         const endX = (selEndSec / audioBuffer.duration) * timelineWidth;
         const selectionWidth = endX - startX;
 
-        // Calcula a posição do cursor proporcional ao tempo rodado
         const currentProgress = elapsed / (duration / currentSource.playbackRate.value);
         const currentPos = startX + (selectionWidth * currentProgress);
 
@@ -488,11 +572,8 @@
         }
     }
 
-    // EXPORTAÇÃO E DOWNLOAD DO COMPLEMENTO
     downloadBtn.addEventListener('click', function() {
         if (!audioBuffer) return;
-        statusMsg.innerText = "Renderizando alterações na track...";
-
         const targetBuffer = getTrimmedBuffer(audioContext, audioBuffer, selStartSec, selEndSec);
         if (!targetBuffer) return;
 
@@ -502,13 +583,10 @@
         
         const anchor = document.createElement('a');
         anchor.href = url;
-        anchor.download = 'brandtone_studio_track.wav';
+        anchor.download = 'brandtone_mix.wav';
         anchor.click();
-        
-        statusMsg.innerText = "Track exportada com sucesso!";
     });
 
-    // Utilitários de Tratamento de Áudio (Corte e Engenharia .WAV)
     function getTrimmedBuffer(context, buffer, start, end) {
         const rate = buffer.sampleRate;
         const startOffset = Math.floor(start * rate);
@@ -539,7 +617,6 @@
         const playbackRateFactor = Math.pow(2, pitchSemitones / 12);
         const numOfChan = buffer.numberOfChannels;
         const originalSampleRate = buffer.sampleRate;
-        const sampleRate = originalSampleRate / playbackRateFactor; 
         const format = 1;
         const bitDepth = 16;
         
